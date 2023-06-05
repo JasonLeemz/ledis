@@ -37,8 +37,7 @@ func main() {
 	err := tcp.ListenAndServerWithSignal(
 		&tcp.Config{
 			Address: fmt.Sprintf("%s:%d", config.Properties.Bind, config.Properties.Port),
-		},
-		tcp.NewHandler())
+		}, tcp.NewHandler())
 	if err != nil {
 		logger.Error(err)
 	}

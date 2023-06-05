@@ -15,8 +15,7 @@ type Config struct {
 	Address string
 }
 
-func ListenAndServerWithSignal(cfg *Config,
-	handler tcp.Handler) error {
+func ListenAndServerWithSignal(cfg *Config, handler tcp.Handler) error {
 
 	closeChan := make(chan struct{})
 	sigChan := make(chan os.Signal)
