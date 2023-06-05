@@ -97,10 +97,10 @@ func (s StandardErrReply) ToBytes() []byte {
 	return []byte("-" + s.Status + CRLF)
 }
 
-var theStandardErrReply = new(StandardErrReply)
-
-func MakeStandardErrReply() *StandardErrReply {
-	return theStandardErrReply
+func MakeStandardErrReply(status string) *StandardErrReply {
+	return &StandardErrReply{
+		Status: status,
+	}
 }
 
 // IsError

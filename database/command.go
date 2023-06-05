@@ -2,6 +2,7 @@ package database
 
 import "strings"
 
+// 使用时都是只读场景，不存在并发问题
 var cmdTable = make(map[string]*command)
 
 type command struct {

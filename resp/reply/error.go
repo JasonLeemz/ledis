@@ -34,7 +34,9 @@ func (a ArgNumErrReply) ToBytes() []byte {
 var theArgNumErrReply = new(ArgNumErrReply)
 
 func MakeArgNumErrReply(cmd string) *ArgNumErrReply {
-	return theArgNumErrReply
+	return &ArgNumErrReply{
+		Cmd: cmd,
+	}
 }
 
 // SyntaxErrReply
