@@ -6,6 +6,16 @@ import (
 	"ledis/resp/reply"
 )
 
+func init() {
+	RegisterCommand("DEL", del, -2)          // -2代表最少2个参数
+	RegisterCommand("EXISTS", exists, -2)    // 最少2个参数
+	RegisterCommand("FLUSHDB", flushDB, -1)  // 最少1个参数 flushdb a b c
+	RegisterCommand("TYPE", execType, 2)     // 参数个数必须是2 type k1
+	RegisterCommand("RENAME", rename, 3)     // 参数个数必须是3 rename k1 k2
+	RegisterCommand("RENAMENX", renameNX, 3) // 参数个数必须是3 rename k1 k2
+	RegisterCommand("KEYS", keys, 2)         // 参数个数必须是2 keys *
+}
+
 // DEL
 func del(db *DB, args [][]byte) resp.Reply {
 
@@ -110,14 +120,4 @@ func keys(db *DB, args [][]byte) resp.Reply {
 	})
 
 	return reply.MakeMultiBulkReply(result)
-}
-
-func init() {
-	RegisterCommand("DEL", del, -2)          // -2代表最少2个参数
-	RegisterCommand("EXISTS", exists, -2)    // 最少2个参数
-	RegisterCommand("FLUSHDB", flushDB, -1)  // 最少1个参数 flushdb a b c
-	RegisterCommand("TYPE", execType, 2)     // 参数个数必须是2 type k1
-	RegisterCommand("RENAME", rename, 3)     // 参数个数必须是3 rename k1 k2
-	RegisterCommand("RENAMENX", renameNX, 3) // 参数个数必须是3 rename k1 k2
-	RegisterCommand("KEYS", keys, 2)         // 参数个数必须是2 keys *
 }
