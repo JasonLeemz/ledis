@@ -31,7 +31,12 @@ func exists(db *DB, args [][]byte) resp.Reply {
 	return reply.MakeIntReply(result)
 }
 
-//FLUSHDB
+// FLUSHDB
+func flushDB(db *DB, args [][]byte) resp.Reply {
+	db.Flush()
+
+	return reply.MakeOKReply()
+}
 
 //TYPE
 
@@ -42,4 +47,5 @@ func exists(db *DB, args [][]byte) resp.Reply {
 func init() {
 	RegisterCommand("DEL", del, -2)       // -2代表最少2个参数
 	RegisterCommand("EXISTS", exists, -2) // -2代表最少2个参数
+	RegisterCommand("FLUSHDB", flushDB, -1)
 }
