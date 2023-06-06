@@ -32,7 +32,7 @@ func MakeHandler() *RespHandler {
 	}
 }
 
-func (r RespHandler) Handler(ctx context.Context, conn net.Conn) {
+func (r *RespHandler) Handler(ctx context.Context, conn net.Conn) {
 	if r.closing.Get() {
 		_ = conn.Close()
 	}
@@ -84,7 +84,7 @@ func (r *RespHandler) closeClient(client *connection.Connection) {
 	r.activeConn.Delete(client)
 }
 
-func (r RespHandler) Close() error {
+func (r *RespHandler) Close() error {
 	logger.Info("handler shutting down...")
 	r.closing.Set(true)
 	// TODO: concurrent wait

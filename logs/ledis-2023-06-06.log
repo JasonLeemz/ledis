@@ -21,3 +21,47 @@
 [ERROR][database.go:35] 2023/06/06 15:58:27 runtime error: index out of range [0] with length 0
 [ERROR][database.go:35] 2023/06/06 15:58:27 runtime error: index out of range [0] with length 0
 [ERROR][database.go:35] 2023/06/06 15:58:28 runtime error: index out of range [0] with length 0
+[INFO][server.go:43] 2023/06/06 17:06:01 start listen...
+[INFO][server.go:75] 2023/06/06 17:06:17 accepted new conn
+[INFO][server.go:61] 2023/06/06 17:06:52 shutting down
+[INFO][server.go:72] 2023/06/06 17:06:52 accept tcp [::]:6380: use of closed network connection
+[INFO][handler.go:88] 2023/06/06 17:06:52 handler shutting down...
+[ERROR][database.go:35] 2023/06/06 17:07:36 runtime error: index out of range [0] with length 0
+[ERROR][database.go:35] 2023/06/06 17:07:38 runtime error: index out of range [0] with length 0
+[INFO][server.go:44] 2023/06/06 17:24:52 bind: 0.0.0.0:6380, start listening...
+[INFO][server.go:76] 2023/06/06 17:24:57 accepted new conn
+[INFO][server.go:62] 2023/06/06 17:25:02 shutting down
+[INFO][server.go:73] 2023/06/06 17:25:02 accept tcp [::]:6380: use of closed network connection
+[INFO][handler.go:88] 2023/06/06 17:25:02 handler shutting down...
+[INFO][server.go:44] 2023/06/06 17:26:01 bind: 0.0.0.0:6380, start listening...
+[INFO][server.go:76] 2023/06/06 17:26:08 accepted new conn
+[ERROR][database.go:35] 2023/06/06 17:26:11 runtime error: index out of range [0] with length 0
+[ERROR][database.go:35] 2023/06/06 17:26:11 runtime error: index out of range [0] with length 0
+[ERROR][database.go:35] 2023/06/06 17:26:11 runtime error: index out of range [0] with length 0
+[ERROR][database.go:35] 2023/06/06 17:26:11 runtime error: index out of range [0] with length 0
+[ERROR][database.go:35] 2023/06/06 17:26:11 runtime error: index out of range [0] with length 0
+[ERROR][database.go:35] 2023/06/06 17:26:11 runtime error: index out of range [0] with length 0
+[ERROR][database.go:35] 2023/06/06 17:26:11 runtime error: index out of range [0] with length 0
+[ERROR][database.go:35] 2023/06/06 17:26:11 runtime error: index out of range [0] with length 0
+[ERROR][database.go:35] 2023/06/06 17:26:11 runtime error: index out of range [0] with length 0
+[ERROR][database.go:35] 2023/06/06 17:26:11 runtime error: index out of range [0] with length 0
+[ERROR][database.go:35] 2023/06/06 17:26:16 runtime error: index out of range [0] with length 0
+[ERROR][database.go:35] 2023/06/06 17:26:16 runtime error: index out of range [0] with length 0
+[ERROR][database.go:35] 2023/06/06 17:26:17 runtime error: index out of range [0] with length 0
+[INFO][server.go:62] 2023/06/06 17:26:19 shutting down
+[INFO][server.go:73] 2023/06/06 17:26:19 accept tcp [::]:6380: use of closed network connection
+[INFO][handler.go:88] 2023/06/06 17:26:19 handler shutting down...
+[INFO][server.go:44] 2023/06/06 17:27:02 bind: 0.0.0.0:6380, start listening...
+[INFO][server.go:76] 2023/06/06 17:27:04 accepted new conn
+[INFO][server.go:62] 2023/06/06 17:27:08 shutting down
+[INFO][server.go:73] 2023/06/06 17:27:08 accept tcp [::]:6380: use of closed network connection
+[INFO][handler.go:88] 2023/06/06 17:27:08 handler shutting down...
+[INFO][server.go:44] 2023/06/06 17:28:50 bind: 0.0.0.0:6380, start listening...
+[INFO][server.go:76] 2023/06/06 17:28:51 accepted new conn
+[ERROR][database.go:35] 2023/06/06 17:28:51 runtime error: index out of range [0] with length 0
+[ERROR][database.go:35] 2023/06/06 17:28:52 runtime error: index out of range [0] with length 0
+[INFO][server.go:62] 2023/06/06 17:28:55 shutting down
+[INFO][server.go:73] 2023/06/06 17:28:55 accept tcp [::]:6380: use of closed network connection
+[INFO][handler.go:88] 2023/06/06 17:28:55 handler shutting down...
+[INFO][handler.go:50] 2023/06/06 17:28:55 connection closed: 127.0.0.1:64738
+[INFO][handler.go:88] 2023/06/06 17:28:55 handler shutting down...

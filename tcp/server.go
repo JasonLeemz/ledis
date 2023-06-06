@@ -2,6 +2,7 @@ package tcp
 
 import (
 	"context"
+	"fmt"
 	"ledis/interface/tcp"
 	"ledis/lib/logger"
 	"net"
@@ -40,7 +41,7 @@ func ListenAndServerWithSignal(cfg *Config, handler tcp.Handler) error {
 		return err
 	}
 
-	logger.Info("start listen...")
+	logger.Info(fmt.Sprintf("bind: %s, start listening...", cfg.Address))
 
 	ListenAndServer(listen, handler, closeChan)
 
