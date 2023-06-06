@@ -78,10 +78,10 @@ func (i IntReply) ToBytes() []byte {
 	return []byte(":" + strconv.FormatInt(i.Code, 10) + CRLF)
 }
 
-var theIntReply = new(IntReply)
-
-func MakeIntReply() *IntReply {
-	return theIntReply
+func MakeIntReply(code int64) *IntReply {
+	return &IntReply{
+		Code: code,
+	}
 }
 
 type ErrorReply interface {
