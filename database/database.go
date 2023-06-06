@@ -1,9 +1,16 @@
 package database
 
-import "ledis/config"
+import (
+	"ledis/config"
+	"ledis/interface/resp"
+	"ledis/lib/logger"
+	"ledis/resp/reply"
+	"strconv"
+	"strings"
+)
 
 type Database struct {
-	dbSet []*DB
+	dbSet []*DB // 数据库
 }
 
 func NewDatabase() *Database {
@@ -20,4 +27,47 @@ func NewDatabase() *Database {
 		mdb.dbSet[i] = singleDB
 	}
 	return mdb
+}
+
+func (database *Database) Exec(client resp.Connection, args [][]byte) resp.Reply {
+	defer func() {
+		if err := recover(); err != nil {
+			logger.Error(err)
+		}
+	}()
+
+	cmdName := strings.ToLower(string(args[0]))
+	if cmdName == "select" {
+		if len(args) != 2 {
+			return reply.MakeArgNumErrReply(cmdName)
+		}
+
+		return execSelect(client, database, args[1:])
+	}
+
+	dbIndex := client.GetDBIndex()
+	dbSet := database.dbSet[dbIndex]
+
+	return dbSet.Exec(client, args)
+}
+
+// SELECT 1
+func execSelect(c resp.Connection, database *Database, args [][]byte) resp.Reply {
+
+	dbNum, err := strconv.Atoi(string(args[1]))
+	if err != nil {
+		return reply.MakeStandardErrReply("ERR invalid DB index")
+	}
+	if dbNum >= len(database.dbSet) {
+		return reply.MakeStandardErrReply("ERR DB index is out of range")
+	}
+
+	c.SelectDB(dbNum)
+	return reply.MakeOKReply()
+}
+
+func (database *Database) AfterClientClose(c resp.Connection) {
+}
+
+func (database *Database) Close() {
 }

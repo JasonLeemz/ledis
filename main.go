@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"ledis/config"
 	"ledis/lib/logger"
+	"ledis/resp/handler"
 	"ledis/tcp"
 	"os"
 )
@@ -37,7 +38,7 @@ func main() {
 	err := tcp.ListenAndServerWithSignal(
 		&tcp.Config{
 			Address: fmt.Sprintf("%s:%d", config.Properties.Bind, config.Properties.Port),
-		}, tcp.NewHandler())
+		}, handler.MakeHandler())
 	if err != nil {
 		logger.Error(err)
 	}

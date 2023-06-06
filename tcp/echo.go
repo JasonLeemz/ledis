@@ -4,11 +4,11 @@ import (
 	"bufio"
 	"context"
 	"io"
-	"ledis/lib/logger"
 	"net"
 	"sync"
 	"time"
 
+	"ledis/lib/logger"
 	"ledis/lib/sync/atomic"
 	"ledis/lib/sync/wait"
 )
@@ -30,7 +30,7 @@ type EchoHandler struct {
 	closing    atomic.Boolean
 }
 
-func NewHandler() *EchoHandler {
+func MakeHandler() *EchoHandler {
 	return &EchoHandler{}
 }
 
