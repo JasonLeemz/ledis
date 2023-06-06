@@ -62,10 +62,10 @@ func (s StatusReply) ToBytes() []byte {
 	return []byte("+" + s.Status + CRLF)
 }
 
-var theStatusReply = new(StatusReply)
-
-func MakeStatusReply() *StatusReply {
-	return theStatusReply
+func MakeStatusReply(status string) *StatusReply {
+	return &StatusReply{
+		Status: status,
+	}
 }
 
 // Int

@@ -14,6 +14,10 @@ func (u UnknowErrReply) ToBytes() []byte {
 	return unknownErrBytes
 }
 
+func MakeUnknowErrReply() *UnknowErrReply {
+	return &UnknowErrReply{}
+}
+
 // ArgNumErrReply
 type ArgNumErrReply struct {
 	Cmd string
