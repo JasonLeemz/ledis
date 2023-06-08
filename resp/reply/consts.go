@@ -9,7 +9,7 @@ type PongReply struct {
 
 var pongBytes = []byte("+PONG\r\n")
 
-func (p PongReply) ToBytes() []byte {
+func (p *PongReply) ToBytes() []byte {
 	return pongBytes
 }
 
@@ -26,7 +26,7 @@ type OKReply struct {
 
 var okBytes = []byte("+ok\r\n")
 
-func (O OKReply) ToBytes() []byte {
+func (O *OKReply) ToBytes() []byte {
 	return okBytes
 }
 
@@ -43,7 +43,7 @@ type NullBulkReply struct {
 
 var nullBulkBytes = []byte("$-1\r\n")
 
-func (n NullBulkReply) ToBytes() []byte {
+func (n *NullBulkReply) ToBytes() []byte {
 	return nullBulkBytes
 }
 
@@ -60,7 +60,7 @@ type EmptyMultiBulkReply struct {
 
 var emptyMultiBulkBytes = []byte("*0\r\n")
 
-func (n EmptyMultiBulkReply) ToBytes() []byte {
+func (n *EmptyMultiBulkReply) ToBytes() []byte {
 	return emptyMultiBulkBytes
 }
 
@@ -77,7 +77,7 @@ type NoReply struct {
 
 var noBytes = []byte("")
 
-func (n NoReply) ToBytes() []byte {
+func (n *NoReply) ToBytes() []byte {
 	return noBytes
 }
 

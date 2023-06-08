@@ -6,11 +6,11 @@ type UnknowErrReply struct {
 
 var unknownErrBytes = []byte("-Err unknown\r\n")
 
-func (u UnknowErrReply) Error() string {
+func (u *UnknowErrReply) Error() string {
 	return string(unknownErrBytes)
 }
 
-func (u UnknowErrReply) ToBytes() []byte {
+func (u *UnknowErrReply) ToBytes() []byte {
 	return unknownErrBytes
 }
 
@@ -23,19 +23,17 @@ type ArgNumErrReply struct {
 	Cmd string
 }
 
-func (a ArgNumErrReply) Error() string {
+func (a *ArgNumErrReply) Error() string {
 	return "ERR wrong number of arguments for '" +
 		a.Cmd +
 		"' command"
 }
 
-func (a ArgNumErrReply) ToBytes() []byte {
+func (a *ArgNumErrReply) ToBytes() []byte {
 	return []byte("-ERR wrong number of arguments for '" +
 		a.Cmd +
 		"' command\r\n")
 }
-
-var theArgNumErrReply = new(ArgNumErrReply)
 
 func MakeArgNumErrReply(cmd string) *ArgNumErrReply {
 	return &ArgNumErrReply{
@@ -47,11 +45,11 @@ func MakeArgNumErrReply(cmd string) *ArgNumErrReply {
 type SyntaxErrReply struct {
 }
 
-func (s SyntaxErrReply) Error() string {
+func (s *SyntaxErrReply) Error() string {
 	return "ERR Syntax error"
 }
 
-func (s SyntaxErrReply) ToBytes() []byte {
+func (s *SyntaxErrReply) ToBytes() []byte {
 	return []byte("-ERR Syntax error\r\n")
 }
 
@@ -65,11 +63,11 @@ func MakeSyntaxErrReply() *SyntaxErrReply {
 type WrongTypeErrReply struct {
 }
 
-func (w WrongTypeErrReply) Error() string {
+func (w *WrongTypeErrReply) Error() string {
 	return "WrongType Operation against a key holding the wrong kind of value"
 }
 
-func (w WrongTypeErrReply) ToBytes() []byte {
+func (w *WrongTypeErrReply) ToBytes() []byte {
 	return []byte("-WrongType Operation against a key holding the wrong kind of value\r\n")
 }
 
@@ -84,11 +82,11 @@ type ProtocolErrReply struct {
 	Msg string
 }
 
-func (p ProtocolErrReply) Error() string {
+func (p *ProtocolErrReply) Error() string {
 	return "Err Protocol error" + p.Msg
 }
 
-func (p ProtocolErrReply) ToBytes() []byte {
+func (p *ProtocolErrReply) ToBytes() []byte {
 	return []byte("-Err Protocol error '" +
 		p.Msg +
 		"' \r\n")

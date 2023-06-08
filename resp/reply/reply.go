@@ -32,7 +32,7 @@ type MultiBulkReply struct {
 	Args [][]byte
 }
 
-func (m MultiBulkReply) ToBytes() []byte {
+func (m *MultiBulkReply) ToBytes() []byte {
 	argLen := len(m.Args)
 	var buf bytes.Buffer
 	buf.WriteString("*" + strconv.Itoa(argLen) + CRLF)
@@ -46,10 +46,10 @@ func (m MultiBulkReply) ToBytes() []byte {
 	return buf.Bytes()
 }
 
-var theMultiBulkReply = new(MultiBulkReply)
-
 func MakeMultiBulkReply(arg [][]byte) *MultiBulkReply {
-	return theMultiBulkReply
+	return &MultiBulkReply{
+		Args: arg,
+	}
 }
 
 // status
@@ -58,7 +58,7 @@ type StatusReply struct {
 	Status string
 }
 
-func (s StatusReply) ToBytes() []byte {
+func (s *StatusReply) ToBytes() []byte {
 	return []byte("+" + s.Status + CRLF)
 }
 
@@ -74,7 +74,7 @@ type IntReply struct {
 	Code int64
 }
 
-func (i IntReply) ToBytes() []byte {
+func (i *IntReply) ToBytes() []byte {
 	return []byte(":" + strconv.FormatInt(i.Code, 10) + CRLF)
 }
 
@@ -93,7 +93,7 @@ type StandardErrReply struct {
 	Status string
 }
 
-func (s StandardErrReply) ToBytes() []byte {
+func (s *StandardErrReply) ToBytes() []byte {
 	return []byte("-" + s.Status + CRLF)
 }
 

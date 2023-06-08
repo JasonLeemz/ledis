@@ -17,9 +17,9 @@ type Config struct {
 }
 
 func ListenAndServerWithSignal(cfg *Config, handler tcp.Handler) error {
-
 	closeChan := make(chan struct{})
 	sigChan := make(chan os.Signal)
+
 	signal.Notify(sigChan,
 		syscall.SIGHUP,
 		syscall.SIGQUIT,
@@ -48,9 +48,7 @@ func ListenAndServerWithSignal(cfg *Config, handler tcp.Handler) error {
 	return nil
 }
 
-func ListenAndServer(listener net.Listener,
-	handler tcp.Handler,
-	closeChan <-chan struct{}) {
+func ListenAndServer(listener net.Listener, handler tcp.Handler, closeChan <-chan struct{}) {
 
 	defer func() {
 		_ = listener.Close()

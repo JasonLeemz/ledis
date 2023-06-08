@@ -21,15 +21,23 @@ var (
 
 type RespHandler struct {
 	activeConn sync.Map
-	db         databaseface.Database
 	closing    atomic.Boolean
+	db         databaseface.Database
 }
 
 func MakeHandler() *RespHandler {
-	db := database.NewDatabase()
+	var db databaseface.Database
+	db = database.NewDatabase()
 	return &RespHandler{
 		db: db,
 	}
+}
+
+// 关闭单个客户端
+func (r *RespHandler) closeClient(client *connection.Connection) {
+	_ = client.Close()
+	r.db.AfterClientClose(client)
+	r.activeConn.Delete(client)
 }
 
 func (r *RespHandler) Handler(ctx context.Context, conn net.Conn) {
@@ -40,17 +48,20 @@ func (r *RespHandler) Handler(ctx context.Context, conn net.Conn) {
 	client := connection.NewConn(conn)
 	r.activeConn.Store(client, struct{}{})
 	ch := parser.ParseStream(conn)
+	//死循环监听管道
 	for payload := range ch {
 		if payload.Err != nil {
-			if payload.Err == io.EOF ||
-				payload.Err == io.ErrUnexpectedEOF ||
+			// 错误逻辑
+			// EOF 代表做四次挥手
+			// use of closed network connection 使用了未关闭的连接
+			if payload.Err == io.EOF || payload.Err == io.ErrUnexpectedEOF ||
 				strings.Contains(payload.Err.Error(), "use of closed network connection") {
-				// connection closed
+
 				r.closeClient(client)
 				logger.Info("connection closed: " + client.RemoteAddr().String())
-				return
 			}
-			// protocol err
+
+			// 协议错误
 			errReply := reply.MakeStandardErrReply(payload.Err.Error())
 			err := client.Write(errReply.ToBytes())
 			if err != nil {
@@ -60,16 +71,16 @@ func (r *RespHandler) Handler(ctx context.Context, conn net.Conn) {
 			}
 			continue
 		}
+		// exec
 		if payload.Data == nil {
-			logger.Error("empty payload")
 			continue
 		}
-		re, ok := payload.Data.(*reply.MultiBulkReply)
+		rr, ok := payload.Data.(*reply.MultiBulkReply)
 		if !ok {
-			logger.Error("require multi bulk reply")
+			logger.Error("require mulit bulk reply")
 			continue
 		}
-		result := r.db.Exec(client, re.Args)
+		result := r.db.Exec(client, rr.Args)
 		if result != nil {
 			_ = client.Write(result.ToBytes())
 		} else {
@@ -78,21 +89,18 @@ func (r *RespHandler) Handler(ctx context.Context, conn net.Conn) {
 	}
 }
 
-func (r *RespHandler) closeClient(client *connection.Connection) {
-	_ = client.Close()
-	r.db.AfterClientClose(client)
-	r.activeConn.Delete(client)
-}
-
+// Close 关闭所有客户端
 func (r *RespHandler) Close() error {
-	logger.Info("handler shutting down...")
+	logger.Info("handler shutting down")
 	r.closing.Set(true)
-	// TODO: concurrent wait
-	r.activeConn.Range(func(key interface{}, val interface{}) bool {
-		client := key.(*connection.Connection)
-		_ = client.Close()
-		return true
-	})
+	r.activeConn.Range(
+		func(key, value any) bool {
+			client := key.(*connection.Connection)
+			_ = client.Close()
+
+			return true
+		})
+
 	r.db.Close()
 	return nil
 }

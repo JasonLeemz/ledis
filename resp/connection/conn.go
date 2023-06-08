@@ -16,17 +16,6 @@ type Connection struct {
 	// lock while handler sending response
 	mu sync.Mutex
 
-	// subscribing channels
-	subs map[string]bool
-
-	// password may be changed by CONFIG command during runtime, so store the password
-	password string
-
-	// queued commands for `multi`
-	multiState bool
-	queue      [][][]byte
-	watching   map[string]uint32
-
 	// selected db
 	selectedDB int
 }
@@ -37,37 +26,36 @@ func NewConn(conn net.Conn) *Connection {
 	}
 }
 
-func (c Connection) Write(bytes []byte) error {
+func (c *Connection) RemoteAddr() net.Addr {
+	return c.conn.RemoteAddr()
+}
+func (c *Connection) Close() error {
+	c.waitingReply.WaitWithTimeout(time.Second * 10)
+	_ = c.conn.Close()
+	return nil
+}
+func (c *Connection) Write(bytes []byte) error {
 	if len(bytes) == 0 {
 		return nil
 	}
+
+	// 要保证同一时刻只有一个协程写数据
 	c.mu.Lock()
 	c.waitingReply.Add(1)
 	defer func() {
 		c.waitingReply.Done()
 		c.mu.Unlock()
 	}()
-
 	_, err := c.conn.Write(bytes)
+
 	return err
+
 }
 
-func (c Connection) GetDBIndex() int {
+func (c *Connection) GetDBIndex() int {
 	return c.selectedDB
 }
 
-func (c Connection) SelectDB(dbNum int) {
-	c.selectedDB = dbNum
-}
-
-// Close disconnect with the client
-func (c *Connection) Close() error {
-	c.waitingReply.WaitWithTimeout(10 * time.Second)
-	_ = c.conn.Close()
-	return nil
-}
-
-// RemoteAddr returns the remote network address
-func (c *Connection) RemoteAddr() net.Addr {
-	return c.conn.RemoteAddr()
+func (c *Connection) SelectDB(dbNUM int) {
+	c.selectedDB = dbNUM
 }

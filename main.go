@@ -18,7 +18,7 @@ var defaultProperties = &config.ServerProperties{
 
 func fileExists(filename string) bool {
 	stat, err := os.Stat(filename)
-	return err == nil && stat.IsDir()
+	return err == nil && !stat.IsDir()
 }
 
 func main() {
@@ -28,7 +28,7 @@ func main() {
 		Ext:        "log",
 		TimeFormat: "2006-01-02",
 	})
-
+	fmt.Println(configFile)
 	if fileExists(configFile) {
 		config.SetupConfig(configFile)
 	} else {

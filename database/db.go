@@ -33,7 +33,7 @@ func (db *DB) Exec(c resp.Connection, cmdLine CmdLine) resp.Reply {
 	}
 
 	// 参数个数
-	if validArity(cmd.arity, cmdLine) {
+	if !validArity(cmd.arity, cmdLine) {
 		return reply.MakeArgNumErrReply(cmdName)
 	}
 
@@ -42,8 +42,12 @@ func (db *DB) Exec(c resp.Connection, cmdLine CmdLine) resp.Reply {
 	return fun(db, cmdLine[1:])
 }
 
-func validArity(arity int, args [][]byte) bool {
-	return true
+func validArity(arity int, cmdArgs [][]byte) bool {
+	argNum := len(cmdArgs)
+	if arity >= 0 {
+		return argNum == arity
+	}
+	return argNum >= -arity
 }
 
 /* ---- data Access ----- */

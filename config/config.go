@@ -4,14 +4,12 @@ import (
 	"bufio"
 	"io"
 	"os"
-	"path/filepath"
 	"reflect"
 	"strconv"
 	"strings"
 	"time"
 
 	"ledis/lib/logger"
-	"ledis/lib/utils"
 )
 
 var (
@@ -21,31 +19,41 @@ var (
 
 // ServerProperties defines global config properties
 type ServerProperties struct {
-	// for Public configuration
-	RunID             string `cfg:"runid"` // runID always different at every exec.
-	Bind              string `cfg:"bind"`
-	Port              int    `cfg:"port"`
-	Dir               string `cfg:"dir"`
-	AppendOnly        bool   `cfg:"appendonly"`
-	AppendFilename    string `cfg:"appendfilename"`
-	AppendFsync       string `cfg:"appendfsync"`
-	AofUseRdbPreamble bool   `cfg:"aof-use-rdb-preamble"`
-	MaxClients        int    `cfg:"maxclients"`
-	RequirePass       string `cfg:"requirepass"`
-	Databases         int    `cfg:"databases"`
-	RDBFilename       string `cfg:"dbfilename"`
-	MasterAuth        string `cfg:"masterauth"`
-	SlaveAnnouncePort int    `cfg:"slave-announce-port"`
-	SlaveAnnounceIP   string `cfg:"slave-announce-ip"`
-	ReplTimeout       int    `cfg:"repl-timeout"`
+	//// for Public configuration
+	////RunID             string `cfg:"runid"` // runID always different at every exec.
+	//Bind              string `cfg:"bind"`
+	//Port              int    `cfg:"port"`
+	//Dir               string `cfg:"dir"`
+	//AppendOnly        bool   `cfg:"appendonly"`
+	//AppendFilename    string `cfg:"appendfilename"`
+	//AppendFsync       string `cfg:"appendfsync"`
+	//AofUseRdbPreamble bool   `cfg:"aof-use-rdb-preamble"`
+	//MaxClients        int    `cfg:"maxclients"`
+	//RequirePass       string `cfg:"requirepass"`
+	//Databases         int    `cfg:"databases"`
+	//RDBFilename       string `cfg:"dbfilename"`
+	//MasterAuth        string `cfg:"masterauth"`
+	//SlaveAnnouncePort int    `cfg:"slave-announce-port"`
+	//SlaveAnnounceIP   string `cfg:"slave-announce-ip"`
+	//ReplTimeout       int    `cfg:"repl-timeout"`
+	//
+	//// for cluster mode configuration
+	//ClusterEnabled string   `cfg:"cluster-enabled"` // Not used at present.
+	//Peers          []string `cfg:"peers"`
+	//Self           string   `cfg:"self"`
+	//
+	//// config file path
+	//CfPath string `cfg:"cf,omitempty"`
+	Bind           string `cfg:"bind"`
+	Port           int    `cfg:"port"`
+	AppendOnly     bool   `cfg:"appendOnly"`
+	AppendFilename string `cfg:"appendFilename"`
+	MaxClients     int    `cfg:"maxclients"`
+	RequirePass    string `cfg:"requirepass"`
+	Databases      int    `cfg:"databases"`
 
-	// for cluster mode configuration
-	ClusterEnabled string   `cfg:"cluster-enabled"` // Not used at present.
-	Peers          []string `cfg:"peers"`
-	Self           string   `cfg:"self"`
-
-	// config file path
-	CfPath string `cfg:"cf,omitempty"`
+	Peers []string `cfg:"peers"`
+	Self  string   `cfg:"self"`
 }
 
 type ServerInfo struct {
@@ -67,7 +75,7 @@ func init() {
 		Bind:       "127.0.0.1",
 		Port:       6379,
 		AppendOnly: false,
-		RunID:      utils.RandString(40),
+		//RunID:      utils.RandString(40),
 	}
 }
 
@@ -137,17 +145,4 @@ func SetupConfig(configFilename string) {
 	}
 	defer file.Close()
 	Properties = parse(file)
-	Properties.RunID = utils.RandString(40)
-	configFilePath, err := filepath.Abs(configFilename)
-	if err != nil {
-		return
-	}
-	Properties.CfPath = configFilePath
-	if Properties.Dir == "" {
-		Properties.Dir = "."
-	}
-}
-
-func GetTmpDir() string {
-	return Properties.Dir + "/tmp"
 }
