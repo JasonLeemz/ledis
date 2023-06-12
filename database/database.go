@@ -1,6 +1,7 @@
 package database
 
 import (
+	"ledis/aof"
 	"ledis/config"
 	"ledis/interface/resp"
 	"ledis/lib/logger"
@@ -10,23 +11,39 @@ import (
 )
 
 type Database struct {
-	dbSet []*DB // 数据库
+	dbSet      []*DB // 数据库
+	aofHandler *aof.AofHandler
 }
 
 func NewDatabase() *Database {
-	mdb := &Database{}
+	database := &Database{}
 
 	if config.Properties.Databases == 0 {
 		config.Properties.Databases = 16
 	}
 
-	mdb.dbSet = make([]*DB, config.Properties.Databases)
-	for i := range mdb.dbSet {
+	database.dbSet = make([]*DB, config.Properties.Databases)
+	for i := range database.dbSet {
 		singleDB := makeDB()
 		singleDB.index = i
-		mdb.dbSet[i] = singleDB
+		database.dbSet[i] = singleDB
 	}
-	return mdb
+
+	// 初始化aof
+	if config.Properties.AppendOnly {
+		handler, err := aof.NewAofHandler(database)
+		if err != nil {
+			panic(err)
+		}
+		database.aofHandler = handler
+		for _, db := range database.dbSet {
+			sdb := db
+			sdb.addAof = func(line CmdLine) {
+				database.aofHandler.AddAof(sdb.index, line)
+			}
+		}
+	}
+	return database
 }
 
 func (database *Database) Exec(client resp.Connection, args [][]byte) resp.Reply {
@@ -54,7 +71,7 @@ func (database *Database) Exec(client resp.Connection, args [][]byte) resp.Reply
 // SELECT 1
 func execSelect(c resp.Connection, database *Database, args [][]byte) resp.Reply {
 
-	dbNum, err := strconv.Atoi(string(args[1]))
+	dbNum, err := strconv.Atoi(string(args[0]))
 	if err != nil {
 		return reply.MakeStandardErrReply("ERR invalid DB index")
 	}

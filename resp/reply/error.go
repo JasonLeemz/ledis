@@ -18,7 +18,7 @@ func MakeUnknowErrReply() *UnknowErrReply {
 	return &UnknowErrReply{}
 }
 
-// ArgNumErrReply
+// ArgNumErrReply ...
 type ArgNumErrReply struct {
 	Cmd string
 }
@@ -41,7 +41,7 @@ func MakeArgNumErrReply(cmd string) *ArgNumErrReply {
 	}
 }
 
-// SyntaxErrReply
+// SyntaxErrReply ...
 type SyntaxErrReply struct {
 }
 
@@ -59,7 +59,7 @@ func MakeSyntaxErrReply() *SyntaxErrReply {
 	return theSyntaxErrReply
 }
 
-// WrongTypeErrReply
+// WrongTypeErrReply ...
 type WrongTypeErrReply struct {
 }
 
@@ -77,7 +77,7 @@ func MakeWrongTypeErrReply() *WrongTypeErrReply {
 	return theWrongTypeErrReply
 }
 
-// ProtocolErrReply
+// ProtocolErrReply ...
 type ProtocolErrReply struct {
 	Msg string
 }
@@ -92,8 +92,8 @@ func (p *ProtocolErrReply) ToBytes() []byte {
 		"' \r\n")
 }
 
-var theProtocolErrReply = new(ProtocolErrReply)
-
-func MakeProtocolErrReply() *ProtocolErrReply {
-	return theProtocolErrReply
+func MakeProtocolErrReply(msg string) *ProtocolErrReply {
+	return &ProtocolErrReply{
+		Msg: msg,
+	}
 }

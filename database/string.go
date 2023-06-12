@@ -3,6 +3,7 @@ package database
 import (
 	"ledis/interface/database"
 	"ledis/interface/resp"
+	"ledis/lib/utils"
 	"ledis/resp/reply"
 )
 
@@ -30,6 +31,9 @@ func set(db *DB, args [][]byte) resp.Reply {
 		Data: val,
 	}
 	db.PutEntity(key, entity)
+
+	db.addAof(utils.ToCmdLine3("SET", args...))
+
 	return reply.MakeOKReply()
 }
 
@@ -42,6 +46,9 @@ func setnx(db *DB, args [][]byte) resp.Reply {
 		Data: val,
 	}
 	result := db.PutIfAbsent(key, entity)
+
+	db.addAof(utils.ToCmdLine3("SETNX", args...))
+
 	return reply.MakeIntReply(int64(result))
 }
 
@@ -59,6 +66,9 @@ func getset(db *DB, args [][]byte) resp.Reply {
 		Data: val,
 	}
 	db.PutEntity(key, newEntity)
+
+	db.addAof(utils.ToCmdLine3("GETSET", args...))
+
 	return reply.MakeBulkReply(oldEntity.Data.([]byte))
 }
 

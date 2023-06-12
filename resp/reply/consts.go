@@ -24,7 +24,7 @@ func MakePongReply() *PongReply {
 type OKReply struct {
 }
 
-var okBytes = []byte("+ok\r\n")
+var okBytes = []byte("+OK\r\n")
 
 func (O *OKReply) ToBytes() []byte {
 	return okBytes

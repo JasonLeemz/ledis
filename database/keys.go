@@ -2,6 +2,7 @@ package database
 
 import (
 	"ledis/interface/resp"
+	"ledis/lib/utils"
 	"ledis/lib/wildcard"
 	"ledis/resp/reply"
 )
@@ -24,6 +25,9 @@ func del(db *DB, args [][]byte) resp.Reply {
 		keys[i] = string(v)
 	}
 	deleted := db.Removes(keys...)
+	if deleted > 0 {
+		db.addAof(utils.ToCmdLine3("DEL", args...))
+	}
 	return reply.MakeIntReply(int64(deleted))
 }
 
@@ -45,7 +49,7 @@ func exists(db *DB, args [][]byte) resp.Reply {
 // FLUSHDB
 func flushDB(db *DB, args [][]byte) resp.Reply {
 	db.Flush()
-
+	db.addAof(utils.ToCmdLine3("FLUSHDB", args...))
 	return reply.MakeOKReply()
 }
 
@@ -79,6 +83,8 @@ func rename(db *DB, args [][]byte) resp.Reply {
 	// 删除k1
 	db.Remove(srcKey)
 
+	db.addAof(utils.ToCmdLine3("RENAME", args...))
+
 	return reply.MakeOKReply()
 }
 
@@ -102,6 +108,8 @@ func renameNX(db *DB, args [][]byte) resp.Reply {
 	db.PutEntity(destKey, entity)
 	// 删除k1
 	db.Remove(srcKey)
+
+	db.addAof(utils.ToCmdLine3("RENAMENX", args...))
 
 	return reply.MakeIntReply(1)
 }

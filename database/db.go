@@ -11,11 +11,14 @@ import (
 type DB struct {
 	index int
 	data  dict.Dict
+
+	addAof func(CmdLine)
 }
 
 func makeDB() *DB {
 	db := &DB{
-		data: dict.MakeSyncDict(),
+		data:   dict.MakeSyncDict(),
+		addAof: func(line CmdLine) {}, //空方法 防止报错
 	}
 	return db
 }
