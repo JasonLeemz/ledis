@@ -10,13 +10,13 @@ import (
 	"strings"
 )
 
-type Database struct {
+type StandAloneDatabase struct {
 	dbSet      []*DB // 数据库
 	aofHandler *aof.AofHandler
 }
 
-func NewDatabase() *Database {
-	database := &Database{}
+func NewStandAloneDatabase() *StandAloneDatabase {
+	database := &StandAloneDatabase{}
 
 	if config.Properties.Databases == 0 {
 		config.Properties.Databases = 16
@@ -46,7 +46,7 @@ func NewDatabase() *Database {
 	return database
 }
 
-func (database *Database) Exec(client resp.Connection, args [][]byte) resp.Reply {
+func (database *StandAloneDatabase) Exec(client resp.Connection, args [][]byte) resp.Reply {
 	defer func() {
 		if err := recover(); err != nil {
 			logger.Error(err)
@@ -69,7 +69,7 @@ func (database *Database) Exec(client resp.Connection, args [][]byte) resp.Reply
 }
 
 // SELECT 1
-func execSelect(c resp.Connection, database *Database, args [][]byte) resp.Reply {
+func execSelect(c resp.Connection, database *StandAloneDatabase, args [][]byte) resp.Reply {
 
 	dbNum, err := strconv.Atoi(string(args[0]))
 	if err != nil {
@@ -83,8 +83,8 @@ func execSelect(c resp.Connection, database *Database, args [][]byte) resp.Reply
 	return reply.MakeOKReply()
 }
 
-func (database *Database) AfterClientClose(c resp.Connection) {
+func (database *StandAloneDatabase) AfterClientClose(c resp.Connection) {
 }
 
-func (database *Database) Close() {
+func (database *StandAloneDatabase) Close() {
 }

@@ -3,6 +3,8 @@ package handler
 import (
 	"context"
 	"io"
+	"ledis/cluster"
+	"ledis/config"
 	"ledis/database"
 	databaseface "ledis/interface/database"
 	"ledis/lib/logger"
@@ -27,7 +29,11 @@ type RespHandler struct {
 
 func MakeHandler() *RespHandler {
 	var db databaseface.Database
-	db = database.NewDatabase()
+	if config.Properties.Self != "" && len(config.Properties.Peers) > 0 {
+		db = cluster.MakeClusterDatabase()
+	} else {
+		db = database.NewStandAloneDatabase()
+	}
 	return &RespHandler{
 		db: db,
 	}
